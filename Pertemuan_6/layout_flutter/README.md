@@ -2,9 +2,11 @@
 
 ## Pendahuluan
 
-Laporan ini membahas hasil implementasi layout pada aplikasi Flutter. Setiap tahap didokumentasikan dengan screenshot dari Praktikum 1 hingga Praktikum 4.
+Laporan ini membahas hasil implementasi layout pada aplikasi Flutter. Setiap tahap didokumentasikan dengan screenshot dari:
+1. **Tugas Praktikum 1** yaitu Praktikum 1 hingga Praktikum 4. 
+2. kemudian di lanjut **Tugas Praktikum 2** yaitu praktikum 5 dan tambahan
 
-## Dokumentasi
+## Tugas Praktikum 1
 
 ### Praktikum 1: Membangun Layout di Flutter
 ![Screenshot Praktikum 1](images/P1.png)
@@ -36,6 +38,17 @@ Layout masih menggunakan Column, sehingga tampilan belum bisa di-scroll.
 Semua elemen seperti gambar, title section, button section, dan text section dimasukkan dalam satu ListView.
 Hasilnya tampilan menjadi lebih responsif dan mendukung berbagai ukuran layar.
 
-## Kesimpulan
+## Tugas Praktikum 2
 
-Setiap tahap layout berhasil diimplementasikan sesuai instruksi. Dokumentasi ini dapat digunakan sebagai referensi untuk pengembangan layout Flutter selanjutnya.
+> Lanjutan dari project layout_flutter
+
+### Praktikum 5: Membangun Navigasi di Flutter
+- List View
+![Screenshot Praktikum 5](images/P5_1.png)
+> 
+- Grid View
+![Screenshot Tugas Praktikum ](images/P5_2.png)
+> 
+- Hero Widget
+![Screenshot Tugas Praktikum ](images/hero_widget.gif)
+> 
