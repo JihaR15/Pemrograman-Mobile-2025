@@ -1,5 +1,5 @@
 # Laporan: Layout Flutter
-
+Jiha Ramdhan / 16 / 2341720043 / TI-3D
 ## Pendahuluan
 
 Laporan ini membahas hasil implementasi layout pada aplikasi Flutter. Setiap tahap didokumentasikan dengan screenshot dari:
@@ -50,5 +50,6 @@ Hasilnya tampilan menjadi lebih responsif dan mendukung berbagai ukuran layar.
 ![Screenshot Tugas Praktikum ](images/P5_2.png)
 > 
 - Hero Widget
+
 ![Screenshot Tugas Praktikum ](images/hero_widget.gif)
 > 
