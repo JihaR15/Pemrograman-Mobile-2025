@@ -1,43 +1,162 @@
-# master_plan
+# 📝 Master Plan – Praktikum 1, 2, dan 3  
+**Jiha Ramdhan / 16 / TI-3D / 2341720043**
 
-`Jiha Ramdhan / 16 / TI-3D / 2341720043`
+---
 
-## Praktikum 1 - Dasar State dengan Model-View
+## 📌 Praktikum 1 — Dasar State dengan Model–View
 
-2. Langkah 4 — `data_layer.dart`  
-    - Membuat file yang `export` `plan.dart` dan `task.dart`.  
-    - Tujuan: impor model jadi ringkas (`import 'models/data_layer.dart';`), memudahkan skalabilitas saat jumlah model bertambah, menyembunyikan detail struktur folder, dan mempermudah refactor/maintainability.
+### **2. Langkah 4 — `data_layer.dart`**
+File `data_layer.dart` berfungsi sebagai *barrel file*:
 
-3. Variabel `plan` di Langkah 6 dan alasan `const`  
-    - Kenapa ada variabel `plan`: menyimpan state aplikasi (daftar task, status complete, deskripsi) sebagai single source of truth agar UI bisa merefleksikan perubahan.  
-    - Kenapa `const`: `const Plan()` memberikan state awal yang immutable, memungkinkan canonical instance (potensi efisiensi memori), dan memastikan perubahan hanya melalui mekanisme state (mis. `setState()` atau state management). (Catatan: `Plan` harus punya const constructor agar ini berlaku.)
+- Mengekspor `plan.dart` dan `task.dart`.
+- Memudahkan impor model hanya dengan:
+  ```dart
+  import 'models/data_layer.dart';
+  ```
+- Mengurangi repetisi impor dan meningkatkan maintainability saat jumlah model semakin banyak.
+- Menyembunyikan struktur folder sehingga lebih mudah saat refactor.
 
-4. Hasil Langkah 9 
-    ![Demo menambah, mengubah, centang](/P1.png)  
-    Penjelasan singkat:  
-    - Dibuat ListTile dinamis berisi `Checkbox` (toggle complete) dan `TextFormField` (edit deskripsi).  
-    - Setiap perubahan memanggil `setState()` lalu menyalin list: `List<Task>.from(plan.tasks)` dan mengupdate elemen tertentu, mis.  
-      `..[index] = Task(description: text, complete: task.complete)`  
-    - Hasil: task bisa diedit di UI, status “complete” bisa dicentang, dan list berganti secara reaktif mengikuti state.
+---
 
-5. Kegunaan `initState()` (Langkah 11) dan `dispose()` (Langkah 13)  
-    - `initState()`: inisialisasi resource sekali saat widget dibuat (mis. `ScrollController`), menambahkan listener (mis. unfocus TextField saat scroll).  
-    - `dispose()`: bersihkan resource saat widget dihapus (panggil `scrollController.dispose()` dan lepas listener) untuk menghindari memory leak.  
-    - Inti: `initState()` = siapkan resource; `dispose()` = bersihkan resource.
+### **3. Variabel `plan` di Langkah 6 dan alasan `const`**
 
-## Praktikum 2 — InheritedWidget & InheritedNotifier
+**Kenapa ada variabel `plan`?**
+- Menyimpan state utama aplikasi (list task, status complete) sebagai *single source of truth*.
+- Memudahkan sinkronisasi UI ketika task berubah.
 
-2. Mana yang dimaksud dan mengapa `InheritedNotifier`?  
-    - `PlanProvider extends InheritedNotifier<ValueNotifier<Plan>>` — ini InheritedWidget yang membungkus subtree dan meneruskan `Plan`.  
-    - Menggunakan `InheritedNotifier` karena terintegrasi dengan `ValueNotifier`, memicu rebuild otomatis saat nilai berubah, dan tidak perlu override `updateShouldNotify`. Lebih sederhana dan reaktif untuk state sharing.
+**Kenapa `const`?**
+- `const Plan()` digunakan untuk membuat state awal bersifat **immutable**.
+- Mengurangi alokasi objek tidak perlu (canonicalization).
+- Memastikan perubahan state hanya lewat mekanisme resmi (setState/ValueNotifier).
 
-3. Maksud method di langkah 3  
-    - `int get completedCount => tasks.where((t) => t.complete).length;`  
-    - `String get completenessMessage => '$completedCount out of ${tasks.length} tasks';`  
-    - Tujuan: letakkan logika perhitungan progress di model (fat model, thin view) supaya UI cukup memanggil `plan.completenessMessage`.
+---
 
-4. Hasil Langkah 9 (GIF + penjelasan singkat)  
-    - Bungkus list dengan `ValueListenableBuilder<Plan>` sehingga perubahan `Plan` otomatis update UI.  
-    - Tampilkan progress dengan `Text(plan.completenessMessage)` (mis. di footer/`SafeArea`).  
-    - Tata letak: `Column` + `Expanded` agar list dan footer tidak bertabrakan.  
-    - Interaksi yang terlihat pada GIF: menambah task, mengedit deskripsi, mencentang/uncentang task, dan progress (x out of y) berubah real-time.  
+### **4. Hasil Langkah 9**
+GIF hasil praktikum:
+
+![p1](/p1.gif)
+
+
+**Penjelasan:**
+- `ListTile` berisi Checkbox dan TextFormField.
+- Ketika user mengetik atau mencentang task, state diperbarui dengan:
+  ```dart
+  List<Task>.from(plan.tasks)
+    ..[index] = Task(description: text, complete: task.complete);
+  ```
+- UI otomatis rebuild → task dapat diedit, dicentang, dan progress ikut berubah.
+
+---
+
+### **5. Penjelasan `initState()` dan `dispose()`**
+
+**`initState()`**
+- Menyiapkan resource pertama kali widget dibuat.
+- Contoh: inisialisasi `ScrollController` + tambah listener untuk unfocus TextField saat scroll.
+
+**`dispose()`**
+- Membersihkan resource yang digunakan widget.
+- Contoh: `scrollController.dispose()` untuk mencegah memory leak.
+
+🔎 *Intinya:*  
+`initState()` = setup awal → `dispose()` = cleanup akhir.
+
+---
+
+## 📌 Praktikum 2 — InheritedWidget & InheritedNotifier
+
+### **2. Mana InheritedWidget yang dimaksud dan kenapa memilih `InheritedNotifier`?**
+
+Kode menggunakan:
+
+```dart
+class PlanProvider extends InheritedNotifier<ValueNotifier<Plan>>
+```
+
+Artinya:
+
+- Widget ini adalah **InheritedWidget** yang membagikan state `Plan` ke seluruh subtree.
+- Menggunakan **InheritedNotifier + ValueNotifier** memberikan:
+  - Rebuild otomatis saat nilai berubah.
+  - Tidak perlu override `updateShouldNotify`.
+  - Lebih ringan dan lebih praktis untuk kasus yang reaktif.
+
+---
+
+### **3. Penjelasan method di langkah 3**
+
+```dart
+int get completedCount => tasks.where((t) => t.complete).length;
+
+String get completenessMessage => '$completedCount out of ${tasks.length} tasks';
+```
+
+Tujuan:
+
+- Logika dihitung di **model**, bukan UI.
+- UI cukup memanggil:  
+  ```dart
+  plan.completenessMessage
+  ```
+- Menerapkan prinsip **Thin UI, Fat Model**.
+
+---
+
+### **4. Hasil Langkah 9 (GIF + Penjelasan)**
+
+![p2](/p2.gif)
+
+
+Penjelasan:
+
+- Menggunakan `ValueListenableBuilder<Plan>` agar UI update otomatis saat plan berubah.
+- Progress tampil di footer (`SafeArea`).
+- Struktur:  
+  - `Column` → membungkus layout  
+  - `Expanded` → agar ListView tidak menggeser footer  
+- Interaksi pada GIF: menambah task, mengedit task, mencentang task → semua update real-time.
+
+---
+
+## 📌 Praktikum 3 — Multiple Screens & Shared State
+
+### **2. Penjelasan Diagram**
+![soal](/soalp3.png)
+
+
+Diagram menggambarkan transisi dari **single screen** menjadi **multiple screens**.
+
+**Bagian kiri — sebelum penerapan:**
+- Semua widget (Input, ListView, Checkbox, dsb.) berada di **satu halaman**.
+- User belum bisa membuka halaman detail plan.
+
+**Bagian kanan — sesudah penerapan:**
+- Ada dua screen:
+  1. **PlanCreatorScreen** → daftar rencana
+  2. **PlanScreen** → halaman detail (task lengkap)
+- Data plan dibawa ke halaman baru dan tetap sinkron berkat InheritedNotifier.
+
+Intinya: aplikasi dipisah menjadi dua layar agar UX lebih terstruktur dan lebih mudah mengelola state di banyak halaman.
+
+---
+
+### **3. Hasil Langkah 14 (GIF + penjelasan)**
+
+![p3](/p3.gif)
+
+
+**Penjelasan:**  
+Pada langkah ini saya telah:
+
+- Membuat *Plan List Screen* untuk memilih plan.
+- Menekan salah satu plan membuka **PlanScreen** baru.
+- Halaman PlanScreen menampilkan:
+  - Daftar task  
+  - Checkbox  
+  - TextField  
+  - Tombol tambah task  
+  - Progress: “x out of y tasks”
+
+State tetap konsisten meskipun berpindah halaman karena Plan disimpan dengan **ValueNotifier + InheritedNotifier**.
+
+
