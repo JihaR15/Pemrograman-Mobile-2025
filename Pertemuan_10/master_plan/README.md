@@ -32,9 +32,8 @@ File `data_layer.dart` berfungsi sebagai *barrel file*:
 ---
 
 ### **4. Hasil Langkah 9**
-GIF hasil praktikum:
-
-![p1](/p1.gif)
+GIF hasil praktikum: <br>
+![p1](p1.gif)
 
 
 **Penjelasan:**
@@ -104,7 +103,7 @@ Tujuan:
 
 ### **4. Hasil Langkah 9 (GIF + Penjelasan)**
 
-![p2](/p2.gif)
+![p2](p2.gif)
 
 
 Penjelasan:
@@ -121,7 +120,7 @@ Penjelasan:
 ## 📌 Praktikum 3 — Multiple Screens & Shared State
 
 ### **2. Penjelasan Diagram**
-![soal](/soalp3.png)
+![soal](soalp3.png)
 
 
 Diagram menggambarkan transisi dari **single screen** menjadi **multiple screens**.
@@ -142,7 +141,7 @@ Intinya: aplikasi dipisah menjadi dua layar agar UX lebih terstruktur dan lebih 
 
 ### **3. Hasil Langkah 14 (GIF + penjelasan)**
 
-![p3](/p3.gif)
+![p3](p3.gif)
 
 
 **Penjelasan:**  
